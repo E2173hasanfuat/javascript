@@ -58,12 +58,18 @@ console.log(rak);
 let yas=18;
 let param =525;
 let saglikliim =false;
+let kah=3;
 console.log(yas>15 && param<526 && saglikliim);
 
 console.log(5<3 || 2<3);
 
 
 console.log(!(5>3));
+
+console.log((param>50 && kah>1)||(yas>17 && saglikliim));
+
+
+//!  ==  // !=
 
 
 
