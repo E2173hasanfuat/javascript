@@ -37,7 +37,7 @@ switch (secim) {
         //30
         let dogruSayisi = turkceDogru + matematikDogru + sosyalDogru + fenDogru;
         let yanlisSayisi = turkceYanlis + matematikYanlis + sosyalYanlis + fenYanlis;
-        let kalanDogruSayisi = dogruSayisi - (yanlisSayisi / 4);
+        let kalanDogruSayisi = dogruSayisi - (Math.floor(yanlisSayisi / 4));
         puan = (kalanDogruSayisi * 4) + 100 + okulPuani;
         alert("TYT Puaniniz : " + puan)
         break;
