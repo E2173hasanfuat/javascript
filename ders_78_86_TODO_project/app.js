@@ -30,7 +30,7 @@
 // function filter(e){
 //     const filterValue = e.target.value.toLowerCase().trim();
 //     const todoListesi = document.querySelectorAll(".list-group-item");
-    
+
 //     if(todoListesi.length>0){
 //         todoListesi.forEach(function(todo){
 //             if(todo.textContent.toLowerCase().trim().includes(filterValue)){
@@ -167,19 +167,100 @@ const todoList = document.querySelector(".list-group");
 const firstCardBody = document.querySelectorAll(".card-body")[0];
 const secondCardBody = document.querySelectorAll(".card-body")[1];
 const clearButton = document.querySelector("#clearButton");
-let todos=[];
+const filterInput = document.querySelector("#todoSearch");
+let todos = [];
 
 runEvents();
 
-function runEvents(){
-        form.addEventListener("submit", addTodo)
+function runEvents() {
+    form.addEventListener("submit", addTodo);
+    document.addEventListener("DOMContentLoaded", pageLoaded);
+    secondCardBody.addEventListener("click", removeTodoToUI);
+    clearButton.addEventListener("click", allTodoClean);
+    filterInput.addEventListener("keyup", filter);
+
+}
+
+function filter(e) {
+    const filteValue = e.target.value.toLowerCase().trim();
+    const todoListesi = document.querySelectorAll(".list-group-item");
+    if (todoListesi.length>0) {
+        todoListesi.forEach(function(todo){
+            if (todo.textContent.toLowerCase().trim().includes(filteValue)) {
+                todo.setAttribute("style","display:block");
+           
+            } else {
+                todo.setAttribute("style","display:none !important");
+            }
+        })
+        
+    } else {
+
+        showAlert("warning","degergirula")
+    }
+
+
+
+}
+
+function allTodoClean() {
+    const todoListesi = document.querySelectorAll(".list-group-item");
+    if (todoListesi.length > 0) {
+        //?ekrandan sil
+        todoListesi.forEach(function (todo) {
+            todo.remove();
+
+        });
+
+        //todo storage dan silme
+        todos = [];
+        localStorage.setItem("todos", JSON.stringify(todos));
+        showAlert("warning", "succesfully silindi")
+
+    } else {
+        showAlert("warning", "eleman yok ya la")
+
+    }
+    console.log(todoListesi);
+
+}
+
+function pageLoaded() {
+    checkTodosFromStorage();
+    todos.forEach(function (todo) {
+        //    console.log(todo); 
+        addTodoToUI(todo);
+    });
+}
+
+function removeTodoToUI(e) {
+    // console.log(e.target);
+    if (e.target.className == "fa fa-remove") {
+        const todo = e.target.parentElement.parentElement;
+        todo.remove();
+        // console.log("carpiaya pressed");
+
+        showAlert("success", "siliindi");
+        removeTodoToStorage(todo.textContent);
+    }
+}
+
+function removeTodoToStorage(removeTodo) {
+    checkTodosFromStorage();
+    todos.forEach(function (todo, index) {
+        if (removeTodo = todo) {
+            todos.splice(index, 1)
+        }
+
+    });
+    localStorage.setItem("todos", JSON.stringify(todos))
 }
 
 function addTodo(e) {
     const inputText = addInput.value.trim();
-    if(inputText==null||inputText==""){
+    if (inputText == null || inputText == "") {
         showAlert("warning", "bos koma")
-    }else{
+    } else {
         addTodoToUI(inputText);
         addTodoToStorage(inputText);
         showAlert("success", "todo eklendi");
@@ -191,19 +272,19 @@ function addTodo(e) {
 
     //storage ekleme
     e.preventDefault();
-    
+
 }
 
 function addTodoToUI(newTodo) {
 
 
-    const li =document.createElement("li");
+    const li = document.createElement("li");
     li.className = "list-group-item d-flex justify-content-between";
-    li.textContent=newTodo;
+    li.textContent = newTodo;
 
     const a = document.createElement("a");
-    a.href="#";
-    a.className="delete-item";
+    a.href = "#";
+    a.className = "delete-item";
 
     const i = document.createElement("i");
     i.className = "fa fa-remove"
@@ -212,34 +293,34 @@ function addTodoToUI(newTodo) {
     li.appendChild(a);
     todoList.appendChild(li);
 
-    addInput.value="";
-    
+    addInput.value = "";
+
 };
 
 function addTodoToStorage(newTodo) {
-    checkTodosFromStorage(); 
+    checkTodosFromStorage();
     todos.push(newTodo);
-    localStorage.setItem("todos",JSON.stringify(todos))
+    localStorage.setItem("todos", JSON.stringify(todos))
 }
 
 function checkTodosFromStorage() {
-     
-    if( localStorage.getItem("todos")===null){
-        todos=[];
-    }else{
-        todos =JSON.parse(localStorage.getItem("todos"))
+
+    if (localStorage.getItem("todos") === null) {
+        todos = [];
+    } else {
+        todos = JSON.parse(localStorage.getItem("todos"))
     }
 }
 
-function showAlert(type,message) {
+function showAlert(type, message) {
     const div = document.createElement("div");
     // div.className = "alert alert-"+type;
-    div.className =`alert alert-${type}`;
-    div.textContent =message;
+    div.className = `alert alert-${type}`;
+    div.textContent = message;
 
     firstCardBody.appendChild(div);
-    setTimeout(function(){
+    setTimeout(function () {
         div.remove();
-    },2500)
-    
+    }, 2500)
+
 }
