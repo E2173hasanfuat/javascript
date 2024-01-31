@@ -85,5 +85,6 @@ document.querySelector("#button").addEventListener("click", async () => {
     // console.log(responsePost);
 
 })
+//js senkron calisan bir dildir
 
 
